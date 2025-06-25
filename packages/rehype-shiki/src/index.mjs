@@ -1,3 +1,4 @@
+import { createOnigurumaEngine } from '@shikijs/engine-oniguruma';
 import cLanguage from 'shiki/langs/c.mjs';
 import coffeeScriptLanguage from 'shiki/langs/coffeescript.mjs';
 import cPlusPlusLanguage from 'shiki/langs/cpp.mjs';
@@ -15,8 +16,13 @@ import yamlLanguage from 'shiki/langs/yaml.mjs';
 
 import { createHighlighter } from './highlighter.mjs';
 
+// For the larger, server-based highlighter, we import the faster
+// WASM engine.
+const engine = await createOnigurumaEngine(import('shiki/wasm'));
+
 const { shiki, getLanguageDisplayName, highlightToHast, highlightToHtml } =
   createHighlighter({
+    engine,
     langs: [
       ...cLanguage,
       ...coffeeScriptLanguage,
