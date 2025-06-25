@@ -1,3 +1,4 @@
+import { createJavaScriptRegexEngine } from '@shikijs/engine-javascript';
 import { createOnigurumaEngine } from '@shikijs/engine-oniguruma';
 import cLanguage from 'shiki/langs/c.mjs';
 import coffeeScriptLanguage from 'shiki/langs/coffeescript.mjs';
@@ -16,13 +17,16 @@ import yamlLanguage from 'shiki/langs/yaml.mjs';
 
 import { createHighlighter } from './highlighter.mjs';
 
-// For the larger, server-based highlighter, we import the faster
-// WASM engine.
-const engine = await createOnigurumaEngine(import('shiki/wasm'));
-
 const { shiki, getLanguageDisplayName, highlightToHast, highlightToHtml } =
   createHighlighter({
-    engine,
+    // On the server, we use the faster (but less web-optimized) WASM engine
+    //
+    // TODO(@avivkeller): This engine is not currently supported on OpenNext.
+    // If/when OpenNext supports `WebAssembly.instantiate`, we should switch
+    // this.
+    //
+    // See: https://github.com/opennextjs/opennextjs-cloudflare/blob/main/packages/cloudflare/src/cli/build/patches/plugins/wrangler-external.ts#L30
+    engine: process?.env.CF ? createJavaScriptRegexEngine() : await createOnigurumaEngine(import('shiki/wasm')),
     langs: [
       ...cLanguage,
       ...coffeeScriptLanguage,
