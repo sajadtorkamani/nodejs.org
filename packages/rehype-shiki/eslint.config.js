@@ -1,5 +1,3 @@
-import globals from 'globals';
-
 import baseConfig from '../../eslint.config.js';
 
 export default [
@@ -11,7 +9,9 @@ export default [
         // and top-level await
         ecmaVersion: 'latest',
       },
-      globals: globals.nodeBuiltin,
+      globals: {
+        WebAssembly: 'readonly',
+      },
     },
     rules: {
       // Shiki's export isn't named, it's a re-export
