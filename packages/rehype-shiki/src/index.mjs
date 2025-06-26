@@ -26,7 +26,9 @@ const { shiki, getLanguageDisplayName, highlightToHast, highlightToHtml } =
     // this.
     //
     // See: https://github.com/opennextjs/opennextjs-cloudflare/blob/main/packages/cloudflare/src/cli/build/patches/plugins/wrangler-external.ts#L30
-    engine: process?.env.CF ? createJavaScriptRegexEngine() : await createOnigurumaEngine(import('shiki/wasm')),
+    engine: process?.env.CF
+      ? createJavaScriptRegexEngine()
+      : await createOnigurumaEngine(import('shiki/wasm')),
     langs: [
       ...cLanguage,
       ...coffeeScriptLanguage,
